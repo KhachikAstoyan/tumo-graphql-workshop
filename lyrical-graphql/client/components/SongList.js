@@ -26,8 +26,8 @@ const SongList = () => {
 
    const titles = data.songs.map(song => song && (
       <li className="collection-item" key={song.id}>
-         {song.title}
-         <i className="collection-item"
+         <Link to={`/song/${song.id}`}>{song.title}</Link>
+         <i className="material-icons"
             style={
                {
                   cursor: "pointer",
@@ -45,6 +45,12 @@ const SongList = () => {
             }}>delete</i>
       </li>
    ))
+
+   if (!titles) {
+      return (
+         <h3>Nothing was found...</h3>
+      )
+   }
 
    return (
       <>

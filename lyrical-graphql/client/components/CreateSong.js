@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { graphql, commitMutation, useRelayEnvironment } from 'react-relay'
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
+import BackComponent from './BackComponent';
 
 const mutation = graphql`
    mutation CreateSong_Query($title: String) {
@@ -27,15 +28,6 @@ function CreateSong() {
          variables: { title: songName },
          onCompleted: (response) => {
             history.push('/');
-         },
-         updater: (store, response) => {
-            const root = store.getRoot()
-            const songs = root.getLinkedRecords("songs");
-            if (!songs) return;
-
-            const newSong = store.get(response.addSong.id);
-            songs.push(newSong);
-            root.setLinkedRecords(songs, "songs");
          }
       });
 
@@ -43,14 +35,14 @@ function CreateSong() {
 
    return (
       <>
+         <BackComponent />
          <h3>Create a new song</h3>
          <form onSubmit={handleSubmit}>
-            <input type="text" value={songName} onChange={(e) => setSongName(e.target.value)} />
+            <input type="text" autoFocus={true} value={songName} onChange={(e) => setSongName(e.target.value)} />
 
             <button type="submit" className="btn-large blue">Add</button>
          </form>
 
-         <Link to="/">Back</Link>
       </>
    )
 }

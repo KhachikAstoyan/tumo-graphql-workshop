@@ -26,5 +26,6 @@ type Mutation {
   addSong(title: String): SongType
   addLyricToSong(content: String, songId: ID): SongType
   likeLyric(id: ID): LyricType
+  deleteLyric(lyricId: ID): LyricType
   deleteSong(id: ID): SongType
 }

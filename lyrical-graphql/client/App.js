@@ -1,5 +1,6 @@
 import SongList from "./components/SongList";
 import CreateSong from "./components/CreateSong";
+import SongDetails from "./components/SongDetails";
 import React, { Suspense } from 'react';
 import './style/style.css'
 
@@ -18,6 +19,10 @@ export default function App() {
 
                      <Route path="/songs/new" exact={true}>
                         <CreateSong />
+                     </Route>
+
+                     <Route path="/song/:id" exact={true}>
+                        <SongDetails />
                      </Route>
 
                   </Switch>
