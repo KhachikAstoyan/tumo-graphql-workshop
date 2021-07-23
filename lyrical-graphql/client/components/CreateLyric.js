@@ -5,9 +5,7 @@ const mutation = graphql`
    mutation CreateLyric_Mutation($songId: ID, $content: String) {
       addLyricToSong(content: $content, songId: $songId) {
          id
-         lyrics {
-            content
-         }
+         ...LyricList_song
       }
    }
 `
@@ -20,7 +18,10 @@ function CreateLyric({ songId }) {
       e.preventDefault();
       commitMutation(env, {
          mutation,
-         variables: { songId, content: lyric }
+         variables: { songId, content: lyric },
+         optimisticUpdater: {
+
+         }
       })
       setLyric('');
    }

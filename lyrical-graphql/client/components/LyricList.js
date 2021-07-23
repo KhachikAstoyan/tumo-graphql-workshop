@@ -1,5 +1,5 @@
 import React from 'react'
-import { graphql, useFragment } from 'react-relay';
+import { graphql, useFragment, commitMutation, useRelayEnvironment } from 'react-relay';
 
 const fragment = graphql`
    fragment LyricList_song on SongType {
@@ -11,13 +11,49 @@ const fragment = graphql`
    }
 `
 
+const likeMutation = graphql`
+   mutation LyricList_Mutation($id: ID) {
+      likeLyric(id: $id) {
+         id
+         content
+         likes
+      }
+   }
+`
+
 
 
 function LyricList(props) {
    const { lyrics } = useFragment(fragment, props.song);
+   const env = useRelayEnvironment();
+
+   const onLike = (id) => {
+      console.log(id);
+
+      const data = commitMutation(env, {
+         mutation: likeMutation,
+         variables: { id }
+      })
+
+      console.log(data);
+   }
 
    const items = lyrics.map(lyric => {
-      return <li key={lyric.id} className="collection-item">{lyric.content}</li>
+      return <li key={lyric.id} className="collection-item">
+         {lyric.content}
+         <div className="vote-box">
+            <b>{lyric.likes}</b>
+            <i
+               className="material-icons"
+               style={{ cursor: "pointer" }}
+               onClick={() => {
+                  onLike(lyric.id)
+               }}
+            >
+               thumb_up
+            </i>
+         </div>
+      </li>
    })
 
    return (
