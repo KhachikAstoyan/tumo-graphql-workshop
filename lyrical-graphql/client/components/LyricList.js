@@ -27,12 +27,18 @@ function LyricList(props) {
    const { lyrics } = useFragment(fragment, props.song);
    const env = useRelayEnvironment();
 
-   const onLike = (id) => {
+   const onLike = (id, likes) => {
       console.log(id);
 
       const data = commitMutation(env, {
          mutation: likeMutation,
-         variables: { id }
+         variables: { id },
+         optimisticResponse: {
+            likeLyric: {
+               id,
+               likes: likes + 1
+            }
+         }
       })
 
       console.log(data);
@@ -47,7 +53,7 @@ function LyricList(props) {
                className="material-icons"
                style={{ cursor: "pointer" }}
                onClick={() => {
-                  onLike(lyric.id)
+                  onLike(lyric.id, lyric.likes)
                }}
             >
                thumb_up

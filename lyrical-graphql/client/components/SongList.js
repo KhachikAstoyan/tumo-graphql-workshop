@@ -1,50 +1,26 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import { graphql, useLazyLoadQuery, commitMutation, useRelayEnvironment } from 'react-relay';
 import { Link } from 'react-router-dom';
+import LyricList from './LyricList';
+import Song from './Song';
 
 const query = graphql`
    query SongList_Query {
       songs {
-         id
-         title
+         ...Song_song
       }
    }
 `
 
-const deleteMutation = graphql`
-   mutation SongList_Mutation($id: ID!) {
-      deleteSong(id: $id) {
-         id @deleteRecord
-      }
-   }
-`
+
 
 const SongList = () => {
    const data = useLazyLoadQuery(query);
    const env = useRelayEnvironment();
 
 
-   const titles = data.songs.map(song => song && (
-      <li className="collection-item" key={song.id}>
-         <Link to={`/song/${song.id}`}>{song.title}</Link>
-         <i className="material-icons"
-            style={
-               {
-                  cursor: "pointer",
-                  float: 'right'
-               }
-            }
-            onClick={() => {
-               commitMutation(env, {
-                  mutation: deleteMutation,
-                  variables: { id: song.id },
-                  optimisticUpdater: (store) => {
-                     store.delete(song.id);
-                  }
-               })
-            }}>delete</i>
-      </li>
-   ))
+
+   const titles = data.songs.map(song => song && <Song song={song} />)
 
    if (!titles) {
       return (

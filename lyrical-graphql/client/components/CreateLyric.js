@@ -18,10 +18,7 @@ function CreateLyric({ songId }) {
       e.preventDefault();
       commitMutation(env, {
          mutation,
-         variables: { songId, content: lyric },
-         optimisticUpdater: {
-
-         }
+         variables: { songId, content: lyric }
       })
       setLyric('');
    }
